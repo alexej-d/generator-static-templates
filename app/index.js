@@ -257,8 +257,8 @@ module.exports = generators.Base.extend({
       }
 
       this.fs.copyTpl(
-        this.templatePath('index.html'),
-        this.destinationPath('app/index.html'),
+        this.templatePath('base.pug'),
+        this.destinationPath('app/layouts/base.pug'),
         {
           appname: this.appname,
           includeSass: this.includeSass,
@@ -281,6 +281,12 @@ module.exports = generators.Base.extend({
             'tab'
           ]
         }
+      );
+
+      this.fs.copyTpl(
+        this.templatePath('index.pug'),
+        this.destinationPath('app/index.pug'),
+        {}
       );
     },
 
@@ -312,13 +318,13 @@ module.exports = generators.Base.extend({
       return;
     }
 
-    // wire Bower packages to .html
+    // wire Bower packages to .pug
     wiredep({
       bowerJson: bowerJson,
       directory: 'bower_components',
       exclude: ['bootstrap-sass', 'bootstrap.js'],
       ignorePath: /^(\.\.\/)*\.\./,
-      src: 'app/index.html'
+      src: 'app/layouts/default.pug'
     });
 
     if (this.includeSass) {

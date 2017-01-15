@@ -1,10 +1,10 @@
 {
-  "name": "generator-webapp",
+  "name": "generator-static-templates",
   "version": "2.3.2",
-  "description": "Scaffold out a front-end web app",
+  "description": "Scaffold out a front-end web app with pug templates",
   "license": "BSD-2-Clause",
-  "repository": "yeoman/generator-webapp",
-  "author": "The Yeoman Team",
+  "repository": "alexej-d/generator-static-templates",
+  "author": "The Yeoman Team, modified by alexej-d",
   "main": "app/index.js",
   "engines": {
     "node": ">=4",

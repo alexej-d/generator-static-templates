@@ -11,6 +11,14 @@ const reload = browserSync.reload;
 
 var dev = true;
 
+gulp.task('views', () => {
+  return gulp.src('app/*.pug')
+    .pipe($.plumber())
+    .pipe($.pug({pretty: true}))
+    .pipe(gulp.dest('.tmp'))
+    .pipe(reload({stream: true}));
+});
+
 gulp.task('styles', () => {<% if (includeSass) { %>
   return gulp.src('app/styles/*.scss')
     .pipe($.plumber())
@@ -58,11 +66,11 @@ gulp.task('lint:test', () => {
 });
 
 <% if (includeBabel) { -%>
-gulp.task('html', ['styles', 'scripts'], () => {
+gulp.task('html', ['views', 'styles', 'scripts'], () => {
 <% } else { -%>
-gulp.task('html', ['styles'], () => {
+gulp.task('html', ['views', 'styles'], () => {
 <% } -%>
-  return gulp.src('app/*.html')
+  return gulp.src(['app/*.html', '.tmp/*.html'])
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.cssnano({safe: true, autoprefixer: false})))
@@ -85,7 +93,8 @@ gulp.task('fonts', () => {
 gulp.task('extras', () => {
   return gulp.src([
     'app/*',
-    '!app/*.html'
+    '!app/*.html',
+    '!app/*.pug'
   ], {
     dot: true
   }).pipe(gulp.dest('dist'));
@@ -94,7 +103,7 @@ gulp.task('extras', () => {
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 gulp.task('serve', () => {
-  runSequence(['clean', 'wiredep'], ['styles'<% if (includeBabel) { %>, 'scripts'<% } %>, 'fonts'], () => {
+  runSequence(['clean', 'wiredep'], ['views', 'styles'<% if (includeBabel) { %>, 'scripts'<% } %>, 'fonts'], () => {
     browserSync.init({
       notify: false,
       port: 9000,
@@ -115,6 +124,7 @@ gulp.task('serve', () => {
       '.tmp/fonts/**/*'
     ]).on('change', reload);
 
+    gulp.watch('app/**/*.pug', ['views']);
     gulp.watch('app/styles/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
 <% if (includeBabel) { -%>
     gulp.watch('app/scripts/**/*.js', ['scripts']);
@@ -172,13 +182,13 @@ gulp.task('wiredep', () => {<% if (includeSass) { %>
     }))
     .pipe(gulp.dest('app/styles'));
 <% } %>
-  gulp.src('app/*.html')
+  gulp.src('app/layouts/*.pug')
     .pipe(wiredep({<% if (includeBootstrap) { if (includeSass) { %>
       exclude: ['bootstrap-sass'],<% } else { %>
       exclude: ['bootstrap.js'],<% }} %>
       ignorePath: /^(\.\.\/)*\.\./
     }))
-    .pipe(gulp.dest('app'));
+    .pipe(gulp.dest('app/layouts'));
 });
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
