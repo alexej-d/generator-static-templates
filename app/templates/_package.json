@@ -9,7 +9,7 @@
     "babel-register": "^6.5.2",
     "browser-sync": "^2.2.1",
     "del": "^2.2.0",
-    "gulp": "^3.9.0",
+    "gulp": "gulpjs/gulp#4.0",
     "gulp-autoprefixer": "^3.0.1",<% if (includeBabel) { %>
     "gulp-babel": "^6.1.1",<% } %>
     "gulp-cache": "^0.4.2",
@@ -28,7 +28,6 @@
     "gulp-uglify": "^2.0.0",
     "gulp-useref": "^3.0.0",
     "main-bower-files": "^2.5.0",
-    "run-sequence": "^1.2.2",
     "wiredep": "^4.0.0"
   },
   "eslintConfig": {
